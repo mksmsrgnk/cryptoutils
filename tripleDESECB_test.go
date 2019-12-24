@@ -7,7 +7,7 @@ import (
 
 func TestECBEncrypt(t *testing.T) {
 	encrypter := NewTripleDESECBEncrypter()
-	result, err := encrypter.Encrypt([]byte("test"), key, NewPKCS5Padding())
+	result, err := encrypter.Encrypt([]byte("test"), key)
 	if err != nil {
 		t.Error(err)
 	}
@@ -20,7 +20,7 @@ func TestECBEncrypt(t *testing.T) {
 func TestECBDecrypt(t *testing.T) {
 	decrypter := NewTripleDESECBDecrypter()
 	src, _ := base64.StdEncoding.DecodeString("rS2DEDBlX8k=")
-	result, err := decrypter.Decrypt(src, key, NewPKCS5Padding())
+	result, err := decrypter.Decrypt(src, key)
 	if err != nil {
 		t.Error(err)
 	}

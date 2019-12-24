@@ -5,10 +5,10 @@ import (
 	"crypto/des"
 )
 
-type tripleDESCBCEncrypt struct{}
+type TripleDESCBCEncrypt struct{}
 
-func (tripleDESCBCEncrypt) Encrypt(src, key, iv []byte,
-	p Padder) ([]byte, error) {
+func (TripleDESCBCEncrypt) Encrypt(src, key, iv []byte,
+	p Pader) ([]byte, error) {
 	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
@@ -20,10 +20,10 @@ func (tripleDESCBCEncrypt) Encrypt(src, key, iv []byte,
 	return out, nil
 }
 
-type tripleDESCBCDecrypt struct{}
+type TripleDESCBCDecrypt struct{}
 
-func (tripleDESCBCDecrypt) Decrypt(src, key, iv []byte,
-	unp UnPadder) ([]byte, error) {
+func (TripleDESCBCDecrypt) Decrypt(src, key, iv []byte,
+	unp Pader) ([]byte, error) {
 	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
@@ -38,11 +38,11 @@ func (tripleDESCBCDecrypt) Decrypt(src, key, iv []byte,
 }
 
 //NewTripleDESCBCEncrypter triple DES CBC encrypter
-func NewTripleDESCBCEncrypter() CBCEncrypter {
-	return tripleDESCBCEncrypt{}
+func NewTripleDESCBCEncrypter() TripleDESCBCEncrypt {
+	return TripleDESCBCEncrypt{}
 }
 
 //NewTripleDESCBCDecrypter triple DES CBC decrypter
-func NewTripleDESCBCDecrypter() CBCDecrypter {
-	return tripleDESCBCDecrypt{}
+func NewTripleDESCBCDecrypter() TripleDESCBCDecrypt {
+	return TripleDESCBCDecrypt{}
 }

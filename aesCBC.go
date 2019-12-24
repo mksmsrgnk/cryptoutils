@@ -5,10 +5,15 @@ import (
 	"crypto/cipher"
 )
 
-type aesCBCEncrypt struct{}
+type Pader interface {
+	Pad(src []byte, blockSize int) []byte
+	UnPad(src []byte) ([]byte, error)
+}
 
-func (aesCBCEncrypt) Encrypt(src, key, iv []byte,
-	p Padder) ([]byte, error) {
+type AESCBCEncrypt struct{}
+
+func (AESCBCEncrypt) Encrypt(src, key, iv []byte,
+	p Pader) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -20,10 +25,10 @@ func (aesCBCEncrypt) Encrypt(src, key, iv []byte,
 	return out, nil
 }
 
-type aesCBCDecrypt struct{}
+type AESCBCDecrypt struct{}
 
-func (aesCBCDecrypt) Decrypt(src, key, iv []byte,
-	unp UnPadder) ([]byte, error) {
+func (AESCBCDecrypt) Decrypt(src, key, iv []byte,
+	unp Pader) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -38,11 +43,11 @@ func (aesCBCDecrypt) Decrypt(src, key, iv []byte,
 }
 
 //NewAESCBCEncrypt encrypts AES
-func NewAESCBCEncrypt() CBCEncrypter {
-	return aesCBCEncrypt{}
+func NewAESCBCEncrypt() AESCBCEncrypt {
+	return AESCBCEncrypt{}
 }
 
 //NewAESCBCDecrypt decrypts AES
-func NewAESCBCDecrypt() CBCDecrypter {
-	return aesCBCDecrypt{}
+func NewAESCBCDecrypt() AESCBCDecrypt {
+	return AESCBCDecrypt{}
 }

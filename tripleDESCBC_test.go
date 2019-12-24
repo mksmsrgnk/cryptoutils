@@ -3,6 +3,7 @@ package cryptoutils
 import (
 	"encoding/base64"
 	"encoding/hex"
+	"github.com/mksmsrgnk/padding"
 	"testing"
 )
 
@@ -12,7 +13,7 @@ var (
 
 func TestCBCEncrypt(t *testing.T) {
 	encrypter := NewTripleDESCBCEncrypter()
-	result, err := encrypter.Encrypt([]byte("test"), key, []byte("myivvyiv"), NewPKCS5Padding())
+	result, err := encrypter.Encrypt([]byte("test"), key, []byte("myivvyiv"), padding.NewPKCS5())
 	if err != nil {
 		t.Error(err)
 	}
@@ -25,7 +26,7 @@ func TestCBCEncrypt(t *testing.T) {
 func TestCBCDecrypt(t *testing.T) {
 	decrypter := NewTripleDESCBCDecrypter()
 	src, _ := base64.StdEncoding.DecodeString("XNBtZPI3/80=")
-	result, err := decrypter.Decrypt(src, key, []byte("myivvyiv"), NewPKCS5Padding())
+	result, err := decrypter.Decrypt(src, key, []byte("myivvyiv"), padding.NewPKCS5())
 	if err != nil {
 		t.Error(err)
 	}

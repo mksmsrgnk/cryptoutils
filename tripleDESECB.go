@@ -3,17 +3,17 @@ package cryptoutils
 import (
 	"crypto/des"
 	"errors"
+	"github.com/mksmsrgnk/padding"
 )
 
-type tripleDESECBEncrypt struct{}
+type TripleDESECBEncrypt struct{}
 
-func (tripleDESECBEncrypt) Encrypt(src, key []byte,
-	p Padder) ([]byte, error) {
+func (TripleDESECBEncrypt) Encrypt(src, key []byte) ([]byte, error) {
 	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
 	}
-	pSrc := p.Pad(src, block.BlockSize())
+	pSrc := padding.NewZero().Pad(src, block.BlockSize())
 	if len(pSrc)%block.BlockSize() != 0 {
 		return nil, errors.New("need a multiple of the block size")
 	}
@@ -27,10 +27,9 @@ func (tripleDESECBEncrypt) Encrypt(src, key []byte,
 	return out, nil
 }
 
-type tripleDESECBDecrypt struct{}
+type TripleDESECBDecrypt struct{}
 
-func (tripleDESECBDecrypt) Decrypt(src, key []byte,
-	unp UnPadder) ([]byte, error) {
+func (TripleDESECBDecrypt) Decrypt(src, key []byte) ([]byte, error) {
 	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
@@ -45,7 +44,7 @@ func (tripleDESECBDecrypt) Decrypt(src, key []byte,
 		src = src[block.BlockSize():]
 		dst = dst[block.BlockSize():]
 	}
-	out, err = unp.UnPad(out)
+	out, err = padding.NewZero().UnPad(out)
 	if err != nil {
 		return nil, err
 	}
@@ -53,11 +52,11 @@ func (tripleDESECBDecrypt) Decrypt(src, key []byte,
 }
 
 //NewTripleDESECBEncrypter triple DES ECB encrypter
-func NewTripleDESECBEncrypter() ECBEncrypter {
-	return tripleDESECBEncrypt{}
+func NewTripleDESECBEncrypter() TripleDESECBEncrypt {
+	return TripleDESECBEncrypt{}
 }
 
 //NewTripleDESECBDecrypter triple DES ECB decrypter
-func NewTripleDESECBDecrypter() ECBDecrypter {
-	return tripleDESECBDecrypt{}
+func NewTripleDESECBDecrypter() TripleDESECBDecrypt {
+	return TripleDESECBDecrypt{}
 }
